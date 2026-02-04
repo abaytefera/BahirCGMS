@@ -7,7 +7,7 @@ const WhyChooseSection = () => {
   const translations = {
     ENG: {
       tag: "Why Choose CGMS",
-      title: "CGMS Is Designed To Make Environmental Reporting Simple For Citizens And Effective For Institutions.",
+      title: "CGMS Is Designed To Make Reporting Simple For Citizens And Effective For Institutions.",
       desc: "Our platform bridges the gap between public concern and institutional action, ensuring every voice is heard and every issue is tracked to resolution.",
       features: [
         "Easy-to-use web and mobile access",

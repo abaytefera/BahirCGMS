@@ -20,7 +20,7 @@ const Footer = () => {
       disclaimer: "Disclaimer",
       terms: "Terms & Condition",
       gdpr: "GDPR",
-      authority: "ENVIRONMENTAL PROTECTION AUTHORITY"
+      authority: "PROTECTION AUTHORITY"
     },
     AMH: {
       official: "ይህ ይፋዊ የመንግስት የአገልግሎት መስጫ ፕላትፎርም ነው።",

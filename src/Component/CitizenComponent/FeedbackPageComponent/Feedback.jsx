@@ -17,7 +17,7 @@ const Feedback = () => {
   const translations = {
     ENG: {
       title: "Share Your Feedback",
-      subtitle: "Help us improve our environmental services",
+      subtitle: "Help us improve our services",
       refLabel: "Reference Number (Optional)",
       refPlaceholder: "e.g. EPA-12345",
       ratingLabel: "How would you rate our service?",

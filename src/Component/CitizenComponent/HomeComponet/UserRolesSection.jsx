@@ -8,7 +8,7 @@ const UserSelection = () => {
     ENG: {
       tag: "Who Uses CGMS",
       heading: "CGMS supports multiple users each playing a key role in ensuring effective complaint handling and oversight.",
-      desc: "The platform provides specific tools for citizens, management, and administrators to ensure environmental grievances are resolved transparently.",
+      desc: "The platform provides specific tools for citizens, management, and administrators to ensure grievances are resolved transparently.",
       citizen: "Citizens / Public Users",
       supervisor: "Department Supervisors",
       admin: "System Administrators",

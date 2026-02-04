@@ -11,7 +11,7 @@ const TestimonialsSection = () => {
       title: "Our Users Reviews",
       btn: "See More",
       role: "CLIENTS",
-      text: "This system has made it incredibly easy to report environmental issues and track the progress of my complaints in real-time."
+      text: "This system has made it incredibly easy to report issues and track the progress of my complaints in real-time."
     },
     AMH: {
       tag: "ምስክርነቶች",

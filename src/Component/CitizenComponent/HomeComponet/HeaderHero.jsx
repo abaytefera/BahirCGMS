@@ -10,13 +10,13 @@ export default function HeaderHero() {
   const translations = {
     ENG: {
       title: "Your Voice Matters.",
-      desc: "Submit environmental complaints easily, track their progress transparently, and help us build a cleaner, safer, and more accountable environment for everyone.",
+      desc: "Submit complaints easily, track their progress transparently, and help us build a cleaner, safer, and more accountable for everyone.",
       features: "Secure • Transparent • Citizen-Centered • Multilingual",
       button: "SUBMIT A COMPLAINT →"
     },
     AMH: {
       title: "ድምፅዎ ዋጋ አለው።",
-      desc: "የአካባቢ ጥበቃ አቤቱታዎችን በቀላሉ ያቅርቡ፣ ሂደታቸውንም በግልፅ ይከታተሉ፣ እና ለሁሉም ንፁህ፣ ደህንነቱ የተጠበቀ እና ተጠያቂነት ያለው አካባቢን እንድንገነባ ይርዱን።",
+      desc: "ጥበቃ አቤቱታዎችን በቀላሉ ያቅርቡ፣ ሂደታቸውንም በግልፅ ይከታተሉ፣ እና ለሁሉም ንፁህ፣ ደህንነቱ የተጠበቀ እና ተጠያቂነት ያለው እንድንገነባ ይርዱን።",
       features: "ደህንነቱ የተጠበቀ • ግልፅ • ዜጋ-ተኮር • ብዙ ቋንቋ ተናጋሪ",
       button: "አቤቱታዎን ያቅርቡ →"
     },
