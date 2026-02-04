@@ -76,9 +76,10 @@ const Header = ({ page }) => {
       className={`fixed top-0 inset-x-0 z-[100] transition-all duration-500 ease-in-out ${
         windowOffset > 500 ? "bg-black shadow-lg" : "bg-transparent"
       } ${
-        page ? "bg-[url('/bgHero.png')] bg-cover bg-center bg-no-repeat" : ""
+        page ? "bg-[url('/heroJpg.jpg')] bg-cover bg-center bg-no-repeat" : ""
       }`}
     >
+       <div className={`${page && ("absolute inset-0 bg-black/60")}`}/>
       <nav className="relative z-10 flex items-center justify-between px-4 md:px-10 py-5 text-white">
         
         {/* LOGO */}

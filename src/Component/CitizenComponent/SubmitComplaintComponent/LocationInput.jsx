@@ -7,7 +7,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { HiLocationMarker, HiSearch, HiX } from "react-icons/hi";
+import { HiLocationMarker, HiSearch, HiX, HiRefresh, HiExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import L from "leaflet";
 
@@ -21,58 +21,54 @@ L.Icon.Default.mergeOptions({
 
 export default function LocationInput({ label, required, name, onLocationSelect }) {
   const { Language } = useSelector((state) => state.webState || { Language: "ENG" });
-
-  // YOUR ACCESS TOKEN INTEGRATED HERE
   const API_KEY = "pk.ffdc0ce5fa9af4ba1b08964d6a81174b"; 
 
-  /* ================= STATES ================= */
   const [position, setPosition] = useState(null);
   const [address, setAddress] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [locationDetails, setLocationDetails] = useState({ sub_city: "", woreda: "" });
   const [showMap, setShowMap] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [permissionError, setPermissionError] = useState(false);
   
   const searchTimeout = useRef(null);
 
-  /* ================= TRANSLATIONS ================= */
   const translations = {
     ENG: { 
-        detecting: "Detecting location...", 
-        placeholder: "Search City / Woreda", 
-        mapInstruction: "Click on map to select your location" 
+      detecting: "Locating...", 
+      placeholder: "Search City / Woreda", 
+      mapInstruction: "Click map to move pin",
+      denied: "Location access denied. Please enable it in browser settings." 
     },
     AMH: { 
-        detecting: "ቦታዎን በመፈለግ ላይ...", 
-        placeholder: "ከተማ / ወረዳ ይፈልጉ", 
-        mapInstruction: "ቦታ ለመምረጥ ካርታ ጠቅ ያድርጉ" 
+      detecting: "በመፈለግ ላይ...", 
+      placeholder: "ከተማ / ወረዳ ይፈልጉ", 
+      mapInstruction: "ቦታ ለመምረጥ ካርታውን ይጫኑ",
+      denied: "የቦታ መረጃ አልተፈቀደም። እባክዎ በብሮውዘር ቅንብር ይፍቀዱ።"
     },
   };
-
   const t = translations[Language] || translations.ENG;
 
-  /* ================= HELPERS ================= */
+  /* ================= CORE LOGIC ================= */
 
-  const updateStatesFromData = (data) => {
+  const updateStatesFromData = (data, lat, lon) => {
     const addr = data.address || {};
-    // LocationIQ mapping for Ethiopia/Addis Ababa
     const subCity = addr.suburb || addr.city_district || addr.county || "";
-    const woreda = addr.neighbourhood || addr.quarter || addr.hamlet || addr.road || "";
-    const city = addr.city || addr.town || addr.village || "";
+    const woreda = addr.neighbourhood || addr.quarter || addr.hamlet || "";
+    const city = addr.city || addr.town || "";
     
     const displayAddr = data.display_name || [woreda, subCity, city].filter(Boolean).join(", ");
     
     setAddress(displayAddr);
-    const details = { sub_city: subCity, woreda };
-    setLocationDetails(details);
+    setLocationDetails({ sub_city: subCity, woreda });
 
-    // Update parent form state
     if (onLocationSelect) {
       onLocationSelect({
-        ...details,
-        latitude: data.lat,
-        longitude: data.lon,
+        sub_city: subCity,
+        woreda: woreda,
+        latitude: lat,
+        longitude: lon,
         display_name: displayAddr
       });
     }
@@ -80,63 +76,62 @@ export default function LocationInput({ label, required, name, onLocationSelect 
 
   const reverseGeocode = async (lat, lng) => {
     try {
-      // FIXED: Using LocationIQ to bypass 403 Forbidden
-      const res = await fetch(
-        `https://us1.locationiq.com/v1/reverse.php?key=${API_KEY}&lat=${lat}&lon=${lng}&format=json`
-      );
+      const res = await fetch(`https://us1.locationiq.com/v1/reverse.php?key=${API_KEY}&lat=${lat}&lon=${lng}&format=json`);
       const data = await res.json();
-      updateStatesFromData(data);
+      updateStatesFromData(data, lat, lng);
     } catch (e) {
-      setAddress(`${lat.toFixed(5)}, ${lng.toFixed(5)}`);
+      setAddress(`${lat.toFixed(4)}, ${lng.toFixed(4)}`);
     }
   };
 
-  const fallbackLocation = async () => {
-    const fallback = [9.0016, 38.7542]; // Addis Ababa coordinates
-    setPosition(fallback);
-    await reverseGeocode(fallback[0], fallback[1]);
-    setLoading(false);
-  };
-
-  /* ================= EFFECTS ================= */
-
-  useEffect(() => {
+  const requestLocation = () => {
+    setLoading(true);
+    setPermissionError(false);
+    
     if (!navigator.geolocation) {
-      fallbackLocation();
+      setLoading(false);
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
-        const { latitude: lat, longitude: lng } = pos.coords;
-        setPosition([lat, lng]);
-        await reverseGeocode(lat, lng);
+        const { latitude, longitude } = pos.coords;
+        setPosition([latitude, longitude]);
+        await reverseGeocode(latitude, longitude);
         setLoading(false);
       },
-      (error) => {
-        fallbackLocation();
+      (err) => {
+        setLoading(false);
+        if (err.code === 1) {
+          setPermissionError(true);
+        }
+        // Fallback to Kirkos ONLY if no position exists yet
+        if(!position) {
+            const fallback = [9.0016, 38.7542];
+            setPosition(fallback);
+            reverseGeocode(fallback[0], fallback[1]);
+        }
       },
-      { enableHighAccuracy: true, timeout: 15000 }
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
-  }, []);
+  };
+
+  useEffect(() => { requestLocation(); }, []);
 
   /* ================= SEARCH LOGIC ================= */
 
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    setAddress(value);
-    
+  const handleSearch = (val) => {
+    setAddress(val);
     if (searchTimeout.current) clearTimeout(searchTimeout.current);
+    
+    if (val.length < 3) {
+      setSuggestions([]);
+      return;
+    }
+
     searchTimeout.current = setTimeout(async () => {
-      if (value.length < 3) {
-        setSuggestions([]);
-        return;
-      }
       try {
-        // FIXED: Using LocationIQ Search API
-        const res = await fetch(
-          `https://us1.locationiq.com/v1/search.php?key=${API_KEY}&q=${value}&format=json`
-        );
+        const res = await fetch(`https://us1.locationiq.com/v1/search.php?key=${API_KEY}&q=${val}&format=json`);
         const data = await res.json();
         setSuggestions(Array.isArray(data) ? data : []);
         setShowSuggestions(true);
@@ -146,121 +141,97 @@ export default function LocationInput({ label, required, name, onLocationSelect 
     }, 600);
   };
 
-  const handleSelectSuggestion = (item) => {
+  const selectSuggestion = (item) => {
     const lat = parseFloat(item.lat);
-    const lng = parseFloat(item.lon);
-    setPosition([lat, lng]);
-    updateStatesFromData(item);
+    const lon = parseFloat(item.lon);
+    setPosition([lat, lon]);
+    updateStatesFromData(item, lat, lon);
     setShowSuggestions(false);
     setShowMap(true);
   };
 
-  /* ================= MAP COMPONENTS ================= */
+  /* ================= MAP HELPERS ================= */
 
   function ChangeView({ center }) {
     const map = useMap();
-    useEffect(() => {
-      if (center) map.setView(center, 16);
-    }, [center, map]);
+    useEffect(() => { if (center) map.setView(center, 16); }, [center]);
     return null;
   }
 
   function MapEvents() {
     useMapEvents({
       click(e) {
-        const { lat, lng } = e.latlng;
-        setPosition([lat, lng]);
-        reverseGeocode(lat, lng);
+        setPosition([e.latlng.lat, e.latlng.lng]);
+        reverseGeocode(e.latlng.lat, e.latlng.lng);
       },
     });
     return null;
   }
 
-  /* ================= RENDER ================= */
   return (
     <div className="w-full">
-      <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 px-1">
+      <label className="block text-[11px] font-bold text-gray-500 uppercase mb-2">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
 
       <div className="relative">
-        {/* Form Inputs */}
-        <input type="hidden" name="latitude" value={position?.[0] || ""} />
-        <input type="hidden" name="longitude" value={position?.[1] || ""} />
-        <input type="hidden" name="sub_city" value={locationDetails.sub_city} />
-        <input type="hidden" name="woreda" value={locationDetails.woreda} />
-        <input type="hidden" name={name} value={address} />
-
         <input
           type="text"
           value={loading ? t.detecting : address}
-          onChange={handleInputChange}
-          onFocus={() => address.length >= 3 && setShowSuggestions(true)}
+          onChange={(e) => handleSearch(e.target.value)}
+          onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
           placeholder={t.placeholder}
-          className="w-full bg-gray-50 border border-gray-100 rounded-2xl
-                     py-3.5 pl-4 pr-12 text-sm font-bold text-slate-800
-                     focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+          className={`w-full bg-gray-50 border rounded-xl py-3 px-4 pr-20 text-sm outline-none transition-all ${
+            permissionError ? 'border-amber-400 ring-1 ring-amber-100' : 'border-gray-200 focus:ring-2 focus:ring-blue-500'
+          }`}
         />
 
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-          {address && (
-              <button 
-                type="button" 
-                onClick={() => { setAddress(""); setSuggestions([]); }}
-                className="p-2 text-gray-400 hover:text-red-500"
-              >
-                <HiX className="w-5 h-5" />
-              </button>
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
+          {address && !loading && (
+             <button onClick={() => {setAddress(""); setSuggestions([]);}} className="p-2 text-gray-400"><HiX/></button>
           )}
-          <button
-            type="button"
-            onClick={() => setShowMap((s) => !s)}
-            className="p-2 rounded-xl bg-emerald-50 text-emerald-600
-                       hover:bg-emerald-600 hover:text-white transition"
-          >
-            <HiLocationMarker className="w-6 h-6" />
+          <button type="button" onClick={requestLocation} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+            <HiRefresh className={loading ? "animate-spin" : ""} />
+          </button>
+          <button type="button" onClick={() => setShowMap(!showMap)} className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg">
+            <HiLocationMarker className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Suggestions */}
+        {/* Suggestions List */}
         {showSuggestions && suggestions.length > 0 && (
-          <>
-            <div className="fixed inset-0 z-[1999]" onClick={() => setShowSuggestions(false)} />
-            <div className="absolute z-[2000] w-full mt-2 bg-white border border-gray-100 
-                            rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2">
-              {suggestions.map((item, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => handleSelectSuggestion(item)}
-                  className="px-4 py-3 hover:bg-emerald-50 cursor-pointer text-sm 
-                             text-slate-700 border-b last:border-0 flex items-center gap-3"
-                >
-                  <HiSearch className="text-gray-300 flex-shrink-0" />
-                  <span className="truncate">{item.display_name}</span>
-                </div>
-              ))}
-            </div>
-          </>
+          <div className="absolute z-[2000] w-full mt-1 bg-white border border-gray-100 rounded-xl shadow-xl max-h-60 overflow-y-auto">
+            {suggestions.map((s, i) => (
+              <div 
+                key={i} 
+                onClick={() => selectSuggestion(s)}
+                className="px-4 py-3 hover:bg-blue-50 cursor-pointer text-sm border-b last:border-0 flex items-center gap-2"
+              >
+                <HiSearch className="text-gray-400"/>
+                <span className="truncate">{s.display_name}</span>
+              </div>
+            ))}
+          </div>
         )}
       </div>
 
-      {/* Map */}
+      {/* Permission Error Message */}
+      {permissionError && (
+        <div className="mt-2 flex items-center gap-2 text-amber-600 text-[11px] bg-amber-50 p-2 rounded-lg">
+          <HiExclamationCircle className="w-4 h-4 flex-shrink-0" />
+          <span>{t.denied}</span>
+        </div>
+      )}
+
       {showMap && position && (
-        <div className="mt-4 h-72 w-full rounded-3xl overflow-hidden border shadow-xl relative z-0">
-          <MapContainer
-            center={position}
-            zoom={13}
-            style={{ height: "100%", width: "100%" }}
-          >
+        <div className="mt-3 h-64 rounded-xl overflow-hidden border relative">
+          <MapContainer center={position} zoom={15} style={{ height: "100%" }}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <ChangeView center={position} />
             <Marker position={position} />
             <MapEvents />
           </MapContainer>
-
-          <div className="absolute bottom-0 left-0 right-0 bg-emerald-600/90 backdrop-blur-sm
-                          text-white text-[10px] font-black uppercase
-                          tracking-widest text-center py-3 z-[1000]">
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-[1000] bg-black/70 text-white px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">
             {t.mapInstruction}
           </div>
         </div>
