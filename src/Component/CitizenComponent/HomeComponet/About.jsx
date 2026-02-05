@@ -12,7 +12,7 @@ const AboutSection = () => {
       tag: "About Us",
       title: "We Are Customer Support Services For Seamless Interactions",
       desc1: "We are committed to protecting the citizens by listening to citizens, responding responsibly, and ensuring laws are upheld through transparent and efficient service delivery.",
-      desc2: "The Complaint & Grievance Management System (CGMS) is an official digital service of the Protection Authority, developed to improve public access, accountability, and participation in governance.",
+      desc2: "The Complaint & Grievance Management System (CGMS) is an official digital service , developed to improve public access, accountability, and participation in governance.",
       infoBox: "is accessible through web and mobile devices, ensuring inclusive access for all citizens.",
       f1: "Easy online complaint submission",
       f2: "Transparent case tracking",
