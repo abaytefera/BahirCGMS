@@ -20,7 +20,7 @@ const Footer = () => {
       disclaimer: "Disclaimer",
       terms: "Terms & Condition",
       gdpr: "GDPR",
-      authority: "PROTECTION AUTHORITY"
+      authority: "Powered by Pixel Addis Solutions"
     },
     AMH: {
       official: "ይህ ይፋዊ የመንግስት የአገልግሎት መስጫ ፕላትፎርም ነው።",
@@ -36,7 +36,7 @@ const Footer = () => {
       disclaimer: "ማስተባበያ",
       terms: "ውሎች እና ሁኔታዎች",
       gdpr: "GDPR",
-      authority: "የአካባቢ ጥበቃ ባለስልጣን"
+      authority: "በፒክሰል አዲስ ሶሉሽንስ የበለፀገ"
     },
     ORM: {
       official: "Kun waltajjii tajaajila mootummaa seera qabeessa dha.",
@@ -87,7 +87,7 @@ const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <Mail size={18} />
-              <span className="text-sm opacity-90"> info@epa.gov.et</span>
+              <span className="text-sm opacity-90"> info@bahirdar.gov.et</span>
             </div>
             <div className="flex items-center gap-3">
               <Phone size={18} />

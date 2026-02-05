@@ -108,8 +108,7 @@ const Header = ({ page }) => {
           >
             <option className="text-black" value="ENG">English</option>
             <option className="text-black" value="AMH">አማርኛ</option>
-            <option className="text-black" value="ORM">Afaan Oromoo</option>
-            <option className="text-black" value="TIG">ትግርኛ</option>
+
           </select>
 
           <Link to="/submit-complaint" className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-semibold transition">
@@ -144,8 +143,7 @@ const Header = ({ page }) => {
             >
               <option value="ENG">English</option>
               <option value="AMH">አማርኛ</option>
-              <option value="ORM">Afaan Oromoo</option>
-              <option value="TIG">ትግርኛ</option>
+    
             </select>
           </div>
 
