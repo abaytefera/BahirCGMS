@@ -111,7 +111,7 @@ const downloadQR = () => {
       <h1 className="text-3xl font-black text-center mb-4 text-slate-800 tracking-tight">{t.title}</h1>
       
       {/* Reference Section */}
-      <div className="flex  flex-col items-center justify-center my-10">
+      <div className="flex  gap-3 flex-col items-center justify-center my-10">
         <div className="relative flex wrap items-center gap-6 border-4 border-textColor rounded-[2rem] max-md:p-2 px-8 py-6 bg-slate-50/50 group transition-all hover:bg-white hover:border-textColor ">
           <div className="flex flex-col">
              <span className="text-[10px] font-black text-textColor  uppercase tracking-widest mb-1">
