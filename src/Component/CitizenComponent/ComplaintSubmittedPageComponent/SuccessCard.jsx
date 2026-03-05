@@ -100,7 +100,7 @@ const downloadQR = () => {
   const t = translations[Language] || translations.ENG;
 
   return (
-    <div className="max-w-3xl mx-auto bg-white rounded-[2.5rem] shadow-2xl p-10 animate-in zoom-in duration-500 border border-slate-50">
+    <div className="max-w-3xl  max-md:w-full mx-auto bg-white rounded-[2.5rem] shadow-2xl max-md:py-10 md:p-10 animate-in zoom-in duration-500 border border-slate-50">
       {/* Icon Section */}
       <div className="flex justify-center mb-8">
         <div className="w-24 h-24 flex items-center justify-center rounded-3xl text-green-500  shadow-inner">
@@ -112,12 +112,12 @@ const downloadQR = () => {
       
       {/* Reference Section */}
       <div className="flex  flex-col items-center justify-center my-10">
-        <div className="relative flex items-center gap-6 border-4 border-textColor rounded-[2rem] px-8 py-6 bg-slate-50/50 group transition-all hover:bg-white hover:border-textColor ">
+        <div className="relative flex wrap items-center gap-6 border-4 border-textColor rounded-[2rem] max-md:p-2 px-8 py-6 bg-slate-50/50 group transition-all hover:bg-white hover:border-textColor ">
           <div className="flex flex-col">
              <span className="text-[10px] font-black text-textColor  uppercase tracking-widest mb-1">
                 {Language === "AMH" ? "የመለያ ቁጥር" : "Reference ID"}
              </span>
-             <span className="font-mono font-black text-3xl text-slate-900 tracking-tighter">{referenceNumber}</span>
+             <span className="font-mono font-black max-md:text-lg text-3xl text-slate-900 break-all tracking-tighter">{referenceNumber}</span>
           </div>
           
           <button 
@@ -180,9 +180,9 @@ const downloadQR = () => {
             <div className="w-6 h-6 rounded-lg bg-primBtn text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-lg shadow-textColor ">1</div> 
             {t.step1}
           </li>
-          <li className="flex gap-4 items-center">
+          <li className="flex  gap-4 items-center">
             <div className="w-6 h-6 rounded-lg bg-primBtn text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-lg shadow-textColor ">2</div> 
-            <span>{t.step2} <code className="bg-white px-3 py-1 rounded-xl border-2 border-textColor font-mono text-textColor  ml-2">{referenceNumber}</code></span>
+            <span className="flex items-center max-md:gap-3 max-md:flex-col">{t.step2} <code className="bg-white px-3 py-1 rounded-xl border-2 border-textColor font-mono text-textColor  break-all ml-2">{referenceNumber}</code></span>
           </li>
           <li className="flex gap-4 items-center">
             <div className="w-6 h-6 rounded-lg bg-primBtn text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-lg shadow-textColor ">3</div> 

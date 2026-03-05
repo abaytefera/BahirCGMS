@@ -13,7 +13,7 @@ return (
 <div className="min-h-screen bg-gray-50">
   <Header page={true} ></Header>
 <Breadcrumb />
-<main className="px-6 py-10">
+<main className="md:px-6 md:py-10">
 <SuccessCard />
 </main>
 <Footer></Footer>
