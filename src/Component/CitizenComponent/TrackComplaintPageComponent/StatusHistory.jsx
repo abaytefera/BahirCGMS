@@ -53,7 +53,7 @@ const StatusHistory = ({ status = "Submitted" }) => {
   return (
     <div className="mb-8 p-6 bg-white rounded-3xl shadow-sm border border-gray-100">
       <h3 className="font-black text-[11px] uppercase tracking-widest text-slate-500 mb-12 flex items-center gap-3">
-        <span className="w-1.5 h-4 bg-emerald-500 rounded-full"></span>
+        <span className="w-1.5 h-4 bg-primBtn  rounded-full"></span>
         {t.header}
       </h3>
 
@@ -66,7 +66,7 @@ const StatusHistory = ({ status = "Submitted" }) => {
           initial={{ width: 0 }}
           animate={{ width: `calc(${(currentStep / (steps.length - 1)) * 100}% - 20px)` }}
           transition={{ duration: 1.5, ease: "easeInOut" }}
-          className="absolute top-5 left-10 h-1 bg-emerald-500 z-0 rounded-full"
+          className="absolute top-5 left-10 h-1 bg-primBtn  z-0 rounded-full"
         />
 
         {steps.map((step, index) => (
@@ -93,15 +93,15 @@ const StatusHistory = ({ status = "Submitted" }) => {
             {/* Label */}
             <span className={`mt-4 text-[10px] md:text-[11px] font-black uppercase tracking-tighter
               ${index <= currentStep ? 'text-slate-800' : 'text-gray-300'}
-              ${index === currentStep ? 'text-emerald-600' : ''}`}>
+              ${index === currentStep ? 'text-textColor' : ''}`}>
               {step.label}
             </span>
             
             {/* Active Pulse Indicator */}
             {index === currentStep && (
               <span className="absolute -top-1 -right-1 flex h-4 w-4">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primBtn  opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-4 w-4 bg-primBtn  border-2 border-white"></span>
               </span>
             )}
           </motion.div>

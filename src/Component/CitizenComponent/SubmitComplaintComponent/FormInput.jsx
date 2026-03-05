@@ -5,7 +5,7 @@ export default function FormInput({ Icon, label, required, placeholder, name }) 
         {label} {required && <span className="text-rose-500">*</span>}
       </label>
       <div className="relative group">
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-emerald-500 transition-colors">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-textColor transition-colors">
           {Icon && <Icon size={16} />}
         </div>
         <input
@@ -13,7 +13,7 @@ export default function FormInput({ Icon, label, required, placeholder, name }) 
           type="text"
           placeholder={placeholder}
           required={required}
-          className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-3.5 pl-12 pr-4 text-sm font-bold text-gray-900 focus:bg-white focus:ring-4 focus:ring-emerald-500/5 focus:border-emerald-500 outline-none transition-all placeholder:text-gray-300"
+          className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-3.5 pl-12 pr-4 text-sm font-bold text-gray-900 focus:bg-white focus:ring-4 focus:ring-primBtn focus:border-textColor outline-none transition-all placeholder:text-gray-300"
         />
       </div>
     </div>

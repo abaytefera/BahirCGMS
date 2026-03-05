@@ -5,6 +5,9 @@
 @theme {
   /* This defines the 'sans' variable which is the default for Tailwind v4 */
   --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif;
+    --color-primBtn: rgb(33, 134, 207);
+  --color-textColor: rgb(60, 153, 219);
+
 }
 html {
   scroll-behavior: smooth;

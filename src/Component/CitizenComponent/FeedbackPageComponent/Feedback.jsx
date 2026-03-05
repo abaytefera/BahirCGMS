@@ -104,14 +104,14 @@ const Feedback = () => {
     return (
       <div className="min-h-screen pt-32 bg-slate-50 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white rounded-[2.5rem] shadow-2xl p-10 text-center animate-in zoom-in duration-300">
-          <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="w-20 h-20 bg-primBtn  text-textColor  rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 size={48} />
           </div>
           <h2 className="text-2xl font-black text-slate-800 mb-2">{t.successMsg}</h2>
           <p className="text-slate-500 mb-8 leading-relaxed">{t.subtitle}</p>
           <button 
             onClick={() => reset()} 
-            className="flex items-center justify-center gap-2 w-full py-4 bg-emerald-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-100"
+            className="flex items-center justify-center gap-2 w-full py-4 bg-primBtn  text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-primBtn  transition-all shadow-xl shadow-textColor "
           >
             <ArrowLeft size={16} /> {t.backBtn}
           </button>
@@ -124,12 +124,12 @@ const Feedback = () => {
     <div className="min-h-screen pt-32 bg-slate-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-100">
         
-        <div className="bg-gradient-to-br from-emerald-700 to-emerald-500 text-white p-8 text-center">
+        <div className="bg-gradient-to-br from-textColor  to-textColor  text-white p-8 text-center">
           <div className="flex justify-center mb-4">
             <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/30 italic font-black text-xl shadow-lg">EPA</div>
           </div>
           <h2 className="text-2xl font-black tracking-tight">{t.title}</h2>
-          <p className="text-emerald-50 text-sm mt-2 font-medium opacity-90">{t.subtitle}</p>
+          <p className="text-textColor text-sm mt-2 font-medium opacity-90">{t.subtitle}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
@@ -148,13 +148,13 @@ const Feedback = () => {
               {t.refLabel}
             </label>
             <div className="relative group">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-textColor  transition-colors">
                 <Hash size={18} />
               </div>
               <input
                 type="text"
                 disabled={isLoading}
-                className="w-full pl-12 pr-4 py-3.5 rounded-2xl border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/5 outline-none transition-all text-slate-700 font-bold placeholder:text-slate-300 disabled:opacity-50"
+                className="w-full pl-12 pr-4 py-3.5 rounded-2xl border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-textColor  focus:ring-4 focus:ring-textColor /5 outline-none transition-all text-slate-700 font-bold placeholder:text-slate-300 disabled:opacity-50"
                 placeholder={t.refPlaceholder}
                 value={referenceNumber}
                 onChange={(e) => setReferenceNumber(e.target.value)}
@@ -204,7 +204,7 @@ const Feedback = () => {
               id="comment"
               rows="3"
               disabled={isLoading}
-              className="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/5 outline-none transition-all resize-none text-slate-700 font-bold placeholder:text-slate-300 disabled:opacity-50"
+              className="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-textColor  focus:ring-4 focus:ring-textColor /5 outline-none transition-all resize-none text-slate-700 font-bold placeholder:text-slate-300 disabled:opacity-50"
               placeholder={t.placeholder}
               value={comment}
               onChange={(e) => setComment(e.target.value)}
@@ -216,7 +216,7 @@ const Feedback = () => {
             disabled={!rating || isLoading}
             className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-xs text-white shadow-xl transition-all transform active:scale-95 flex items-center justify-center gap-2 ${
               rating 
-                ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-100" 
+                ? "bg-primBtn  hover:bg-primBtn  shadow-textColor " 
                 : "bg-slate-200 cursor-not-allowed text-slate-400"
             } ${isLoading ? "opacity-70" : ""}`}
           >

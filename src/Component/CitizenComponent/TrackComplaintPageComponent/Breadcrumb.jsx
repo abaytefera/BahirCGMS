@@ -20,7 +20,7 @@ const Breadcrumb = () => {
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center text-[11px] font-black uppercase tracking-widest">
         <Link 
           to="/" 
-          className="text-emerald-600 hover:text-emerald-700 transition-colors"
+          className="text-textColor hover:text-textColor transition-colors"
         >
           {t.home}
         </Link>

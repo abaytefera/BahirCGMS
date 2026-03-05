@@ -32,15 +32,19 @@ export default function TrackComplaintPage() {
       success: "የቅሬታ መረጃው በተሳካ ሁኔታ ተገኝቷል",
       initial: "ዝርዝሩን ለማየት መታወቂያዎን ከላይ ያስገቡ"
     },
-    // ... (ORM and TIG translations remain the same)
+
   };
 
   const t = translations[Language] || translations.ENG;
 
-  const handleTrack = (ref_number) => {
+  const handleTrack = async(ref_number) => {
     if (ref_number) {
-      trigger(ref_number);
-      setHasSearched(true);
+      try{
+      await trigger(ref_number).unwrap();
+      setHasSearched(true);}
+      catch(err){
+         
+      }
     }
   };
 
@@ -55,7 +59,7 @@ export default function TrackComplaintPage() {
       
       <main className="flex-grow max-w-4xl mx-auto px-6 py-12 w-full">
         <div className="text-center mb-10">
-          <h1 className="text-3xl font-black text-slate-800">{t.title}</h1>
+          <h1 className="text-3xl font-black text-primBtn">{t.title}</h1>
           <p className="text-slate-500 mt-2">{t.subtitle}</p>
         </div>
 

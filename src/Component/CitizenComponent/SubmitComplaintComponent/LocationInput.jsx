@@ -193,7 +193,7 @@ export default function LocationInput({ label, required, name, onLocationSelect 
           <button type="button" onClick={requestLocation} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
             <HiRefresh className={loading ? "animate-spin" : ""} />
           </button>
-          <button type="button" onClick={() => setShowMap(!showMap)} className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg">
+          <button type="button" onClick={() => setShowMap(!showMap)} className="p-2 text-textColor hover:bg-primBtn rounded-lg">
             <HiLocationMarker className="w-5 h-5" />
           </button>
         </div>

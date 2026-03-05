@@ -84,7 +84,7 @@ const ApproachSection = () => {
         <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 h-full items-end md:pl-30 md:py-12 gap-0 md:gap-4">
           
           {/* Card 1 */}
-          <div className="bg-green-600/60 backdrop-blur-sm p-8 text-white h-full flex flex-col justify-start border-b md:border-b-0 md:border-r border-emerald-500/30">
+          <div className="bg-green-600/60 backdrop-blur-sm p-8 text-white h-full flex flex-col justify-start border-b md:border-b-0 md:border-r border-textColor">
             <h3 className="text-xl font-bold mb-4 leading-snug">
               {t.card1Title}
             </h3>
@@ -94,7 +94,7 @@ const ApproachSection = () => {
           </div>
 
           {/* Card 2 */}
-          <div className="bg-green-600/60 backdrop-blur-sm p-8 text-white h-full flex flex-col justify-start border-b md:border-b-0 md:border-r border-emerald-500/30">
+          <div className="bg-green-600/60 backdrop-blur-sm p-8 text-white h-full flex flex-col justify-start border-b md:border-b-0 md:border-r border-textColor">
             <h3 className="text-xl font-bold mb-4 leading-snug">
               {t.card2Title}
             </h3>

@@ -10,7 +10,7 @@ import ComplaintSubmittedPage from './Pages/CitizenPages/ComplaintSubmittedPage'
 
 import TrackComplaintPage from './Pages/CitizenPages/TrackComplaintPage'
 import FeedbackPage from './Pages/CitizenPages/FeedbackPage'
-
+import ComplaintDetails from './Component/CitizenComponent/TrackComplaintPageComponent/ComplaintDetails';
 
 
 function App() {
@@ -27,6 +27,7 @@ function App() {
       <Route path='/ComplaintSubmittedPage' Component={ComplaintSubmittedPage}></Route>
          <Route path='/TrackComplaintPage' Component={TrackComplaintPage}></Route>
           <Route path='/FeedbackPage' Component={FeedbackPage}></Route>
+          
          
        
         

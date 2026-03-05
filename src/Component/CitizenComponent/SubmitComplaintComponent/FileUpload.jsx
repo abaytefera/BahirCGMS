@@ -5,8 +5,8 @@ export default function FileUpload({ onFilesChange }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const click = useRef(null);
 
-  const handleFileChange = (e) => {
-    const files = Array.from(e.target.files);
+  const handleFileChange = (filesList) => {
+    const files = Array.from(filesList);
     const newFiles = files.map(file => ({
       id: crypto.randomUUID(),
       file, 
@@ -22,6 +22,19 @@ export default function FileUpload({ onFilesChange }) {
       onFilesChange(updatedTotal.map(f => f.file));
     }
   };
+  const handleDrop = (e) => {
+    e.preventDefault();
+    console.log("what is error")
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFileChange(e.dataTransfer.files);
+      e.dataTransfer.clearData();
+    }
+  };
+  const processFile=(e)=>{
+    e.preventDefault()
+    handleFileChange(e.target.files)
+
+  }
 
   const removeFile = (id) => {
     const filtered = selectedFiles.filter(f => f.id !== id);
@@ -35,15 +48,21 @@ export default function FileUpload({ onFilesChange }) {
   };
 
   return (
-    <div className="py-4">
+    <div className="py-4"
+       onDragOver={(e)=>e.preventDefault()}
+      onDragEnter={(e)=>e.preventDefault()}
+      onDragLeave={(e)=>e.preventDefault()}
+       onDrop={handleDrop}
+    >
       <label className="block text-[10px] font-black text-gray-400 uppercase mb-4">Supporting Evidence</label>
       <div 
+  
         onClick={() => click.current.click()}
-        className="relative border-2 border-dashed border-gray-100 rounded-[2rem] p-10 text-center hover:bg-emerald-50/30 transition-all cursor-pointer"
+        className="relative border-2 border-dashed border-gray-100 rounded-[2rem] p-10 text-center  transition-all cursor-pointer"
       >
-        <input type="file" ref={click} multiple onChange={handleFileChange} className="hidden" />
+        <input type="file" ref={click} multiple onChange={processFile} className="hidden" />
         <div className="flex flex-col items-center">
-          <UploadCloud size={32} className="text-emerald-600 mb-2" />
+          <UploadCloud size={32} className="text-textColor mb-2" />
           <p className="text-gray-900 font-bold text-sm">Click to upload files</p>
         </div>
       </div>

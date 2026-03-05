@@ -28,8 +28,7 @@ export default function SubmitComplaint() {
 
   const handleFormSubmit = async (finalFormData) => {
     try {
-      // DEBUG: View exactly what is going to the server
-      console.log("Final payload entries:");
+     
       for (let pair of finalFormData.entries()) {
         console.log(pair[0] + ': ' + pair[1]);
       }
@@ -38,7 +37,7 @@ export default function SubmitComplaint() {
       const result = await submitComplaint(finalFormData).unwrap();
       
       navigate("/ComplaintSubmittedPage", { 
-        state: { referenceNumber: result?.ref_number || "N/A" } 
+        state: { referenceNumber: result?.ref_number || "N/A",meetingToken:result?.meetingToken } 
       }); 
     } catch (err) {
       console.error("Submission failed:", err);
@@ -62,7 +61,7 @@ export default function SubmitComplaint() {
         {isLoading && (
           <div className="fixed inset-0 flex flex-col items-center justify-center z-50 bg-slate-900/10 backdrop-blur-[2px]">
             <div className="bg-white p-8 rounded-3xl shadow-2xl flex flex-col items-center">
-              <Loader2 className="animate-spin text-emerald-600 mb-4" size={40} />
+              <Loader2 className="animate-spin text-textColor mb-4" size={40} />
               <p className="text-sm font-black text-slate-700 uppercase">{t.uploading}</p>
             </div>
           </div>

@@ -1,9 +1,10 @@
 import { useLocation, Link } from "react-router-dom";
 import React, { useState } from "react";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaDownload } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBullhorn, faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { QRCodeSVG } from 'qrcode.react';
 
 const SuccessCard = () => {
   // Pull language from Redux store
@@ -11,13 +12,35 @@ const SuccessCard = () => {
   const location = useLocation();
   const [isCopied, setIsCopied] = useState(false);
 
-  const referenceNumber = location.state?.referenceNumber || "CGMS-PENDING";
+  const {referenceNumber,meetingToken} = location.state 
+// const referenceNumber="dfjekjfkerjfkrjfgkrjgk"
+// const meetingToken="ndkdjefjeeeeeeeeeeeeeeeeeeeeeeee"
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(referenceNumber);
+  const handleCopy = async() => {
+    await navigator.clipboard.writeText(referenceNumber);
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
   };
+
+const downloadQR = () => {
+    const svg = document.getElementById("meeting-qr");
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      const pngFile = canvas.toDataURL("image/png");
+      const downloadLink = document.createElement("a");
+      downloadLink.download = `Meeting-${referenceNumber}.png`;
+      downloadLink.href = `${pngFile}`;
+      downloadLink.click();
+    };
+    img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
+  };
+
 
   const translations = {
     ENG: {
@@ -80,7 +103,7 @@ const SuccessCard = () => {
     <div className="max-w-3xl mx-auto bg-white rounded-[2.5rem] shadow-2xl p-10 animate-in zoom-in duration-500 border border-slate-50">
       {/* Icon Section */}
       <div className="flex justify-center mb-8">
-        <div className="w-24 h-24 flex items-center justify-center rounded-3xl bg-emerald-50 text-emerald-500 shadow-inner">
+        <div className="w-24 h-24 flex items-center justify-center rounded-3xl text-green-500  shadow-inner">
           <FaCheckCircle className="text-6xl animate-bounce" />
         </div>
       </div>
@@ -88,10 +111,10 @@ const SuccessCard = () => {
       <h1 className="text-3xl font-black text-center mb-4 text-slate-800 tracking-tight">{t.title}</h1>
       
       {/* Reference Section */}
-      <div className="flex justify-center my-10">
-        <div className="relative flex items-center gap-6 border-4 border-emerald-50 rounded-[2rem] px-8 py-6 bg-slate-50/50 group transition-all hover:bg-white hover:border-emerald-100">
+      <div className="flex  flex-col items-center justify-center my-10">
+        <div className="relative flex items-center gap-6 border-4 border-textColor rounded-[2rem] px-8 py-6 bg-slate-50/50 group transition-all hover:bg-white hover:border-textColor ">
           <div className="flex flex-col">
-             <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1">
+             <span className="text-[10px] font-black text-textColor  uppercase tracking-widest mb-1">
                 {Language === "AMH" ? "የመለያ ቁጥር" : "Reference ID"}
              </span>
              <span className="font-mono font-black text-3xl text-slate-900 tracking-tighter">{referenceNumber}</span>
@@ -100,12 +123,44 @@ const SuccessCard = () => {
           <button 
             onClick={handleCopy}
             className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all shadow-lg ${
-              isCopied ? "bg-emerald-500 text-white shadow-emerald-200" : "bg-white text-emerald-600 border border-emerald-100 hover:bg-emerald-600 hover:text-white"
+              isCopied ? "bg-primBtn text-white shadow-textColor " : "bg-white text-textColor  border border-textColor  hover:bg-primBtn hover:text-white"
             }`}
           >
             {isCopied ? t.copied : t.copy}
           </button>
         </div>
+   {meetingToken ? (
+        <div className="bg-gray-50 p-6 rounded-3xl border-2 border-dashed border-gray-200">
+          <p className="text-sm font-bold mb-4 text-gray-700 uppercase tracking-widest">Meeting Entry Pass</p>
+          
+          <div className="bg-white p-4 rounded-2xl shadow-sm inline-block">
+            <QRCodeSVG 
+              id="meeting-qr"
+              value={meetingToken} // The token from your API
+              size={180}
+              level={"H"} // High error correction
+              includeMargin={true}
+            />
+          </div>
+          
+          <p className="mt-4 text-[10px] text-gray-400 max-w-[200px]">
+            Please save this QR code. You will need to present it during your meeting.
+          </p>
+          
+          <button 
+            onClick={downloadQR}
+            className="mt-4 flex items-center justify-center gap-2 w-full py-2 bg-primBtn text-white cursor-pointer rounded-xl text-sm font-bold  transition-all"
+          >
+            <FaDownload size={12} /> Save QR Code
+          </button>
+        </div>
+      ) : (
+        <div className="p-4 bg-blue-50 text-blue-700 rounded-2xl text-sm">
+          Your complaint has been logged. We will contact you via phone or email.
+        </div>
+      )}
+
+
       </div>
 
       <p className="text-center text-slate-500 mb-10 leading-relaxed text-lg font-medium max-w-2xl mx-auto italic">
@@ -122,15 +177,15 @@ const SuccessCard = () => {
         </h2>
         <ul className="space-y-5 text-slate-600 font-bold text-sm">
           <li className="flex gap-4 items-center">
-            <div className="w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-lg shadow-emerald-200">1</div> 
+            <div className="w-6 h-6 rounded-lg bg-primBtn text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-lg shadow-textColor ">1</div> 
             {t.step1}
           </li>
           <li className="flex gap-4 items-center">
-            <div className="w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-lg shadow-emerald-200">2</div> 
-            <span>{t.step2} <code className="bg-white px-3 py-1 rounded-xl border-2 border-emerald-50 font-mono text-emerald-600 ml-2">{referenceNumber}</code></span>
+            <div className="w-6 h-6 rounded-lg bg-primBtn text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-lg shadow-textColor ">2</div> 
+            <span>{t.step2} <code className="bg-white px-3 py-1 rounded-xl border-2 border-textColor font-mono text-textColor  ml-2">{referenceNumber}</code></span>
           </li>
           <li className="flex gap-4 items-center">
-            <div className="w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-lg shadow-emerald-200">3</div> 
+            <div className="w-6 h-6 rounded-lg bg-primBtn text-white flex items-center justify-center text-[10px] flex-shrink-0 shadow-lg shadow-textColor ">3</div> 
             {t.step3}
           </li>
         </ul>
@@ -148,7 +203,7 @@ const SuccessCard = () => {
 
       {/* Action Button */}
       <div className="flex justify-center">
-        <Link to="/TrackComplaintPage" className="bg-emerald-600 hover:bg-emerald-700 text-white px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-2xl shadow-emerald-100 transition-all hover:-translate-y-1 active:scale-95">
+        <Link to="/TrackComplaintPage" className="bg-primBtn hover:bg-primBtn text-white px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-2xl shadow-textColor  transition-all hover:-translate-y-1 active:scale-95">
           {t.trackBtn}
         </Link>
       </div>

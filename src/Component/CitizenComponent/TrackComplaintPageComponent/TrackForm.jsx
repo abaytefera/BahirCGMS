@@ -44,10 +44,10 @@ const TrackForm = ({ onTrack }) => {
   return (
     <div className="rounded-[2.5rem] shadow-2xl p-10 border border-gray-50 max-w-2xl mx-auto">
       <div className="text-center mb-10">
-        <div className="w-24 h-24 mx-auto rounded-[2rem] bg-emerald-50 flex items-center justify-center mb-6 shadow-inner group transition-all duration-500 hover:bg-emerald-600">
+        <div className="w-24 h-24 mx-auto rounded-[2rem] bg-primBtn flex items-center justify-center mb-6 shadow-inner group transition-all duration-500 hover:bg-primBtn ">
           <FontAwesomeIcon 
             icon={faMagnifyingGlass} 
-            className="text-emerald-600 text-4xl group-hover:text-white transition-colors duration-500" 
+            className="text-white text-4xl group-hover:text-white transition-colors duration-500" 
           />
         </div>
         <h1 className="text-3xl font-black text-slate-800 tracking-tight">{t.title}</h1>
@@ -64,13 +64,13 @@ const TrackForm = ({ onTrack }) => {
             value={ref}
             onChange={(e) => setRef(e.target.value)}
             placeholder={t.placeholder}
-            className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-5 focus:border-emerald-500 focus:ring-8 focus:ring-emerald-500/5 focus:bg-white focus:outline-none transition-all font-mono text-xl text-slate-800 placeholder:text-slate-300"
+            className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 py-5 focus:border-primBtn  focus:ring-1 focus:ring-primBtn /5 focus:bg-white focus:outline-none transition-all font-mono text-xl text-slate-800 placeholder:text-slate-300"
           />
         </div>
 
         <button
           onClick={() => onTrack(ref)}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-emerald-100 transition-all active:scale-95 flex items-center justify-center gap-3"
+          className="w-full bg-primBtn  hover:bg-primBtn  text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-primBtn  transition-all active:scale-95 flex items-center justify-center gap-3"
         >
           <FontAwesomeIcon icon={faMagnifyingGlass} className="text-sm" />
           {t.button}

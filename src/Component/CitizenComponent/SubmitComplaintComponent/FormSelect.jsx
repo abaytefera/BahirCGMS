@@ -60,7 +60,7 @@ export default function FormSelect({ Icon, label, name, onChange, value }) {
   return (
     <div className="w-full">
       <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2.5 px-1">
-        {Icon && <Icon className="inline mr-2 text-emerald-500" size={14} />} 
+        {Icon && <Icon className="inline mr-2 text-textColor" size={14} />} 
         {label}
       </label>
       
@@ -71,7 +71,7 @@ export default function FormSelect({ Icon, label, name, onChange, value }) {
           onChange={onChange}
           disabled={isLoading || error}
           className={`w-full bg-gray-50 border rounded-2xl py-3.5 px-4 text-sm font-bold outline-none transition-all appearance-none cursor-pointer disabled:cursor-not-allowed
-            ${error ? 'border-red-200 text-red-500' : 'border-gray-100 text-slate-700 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/5'}
+            ${error ? 'border-red-200 text-red-500' : 'border-gray-100 text-slate-700 focus:bg-white focus:border-textColor focus:ring-4 focus:ring-textColor/5'}
           `}
         >
           {isLoading ? (
@@ -93,11 +93,11 @@ export default function FormSelect({ Icon, label, name, onChange, value }) {
         {/* Right Side Icons */}
         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
           {isLoading ? (
-            <Loader2 size={16} className="animate-spin text-emerald-500" />
+            <Loader2 size={16} className="animate-spin text-textColor" />
           ) : error ? (
             <AlertCircle size={16} className="text-red-400" />
           ) : (
-            <ChevronDown size={18} className="text-gray-400 group-hover:text-emerald-500 transition-colors" />
+            <ChevronDown size={18} className="text-gray-400 group-hover:text-textColor transition-colors" />
           )}
         </div>
       </div>

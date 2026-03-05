@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { faCheckDouble, faUserClock, faHourglassHalf } from "@fortawesome/free-solid-svg-icons";
+import { faCheckDouble, faUserClock, faCalendarAlt, faMapMarkerAlt, faClock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -11,9 +11,10 @@ const ComplaintDetails = ({ complaint }) => {
   // Use the database return or the fallback
   const data = complaint || {
     ref_number: "CMP-20260125-3919",
-    status: "ASSIGNED",
+    status: "SUBMITTED",
     createdAt: "2026-01-25T09:37:04.832Z",
-    Category: { name: "Water" },
+    category: "Sanitation",
+    meeting: { status: "PENDING", scheduledDate: null, scheduledTime: null, location: null }
   };
 
   const translations = {
@@ -28,7 +29,11 @@ const ComplaintDetails = ({ complaint }) => {
       pending: "Pending",
       assigned: "Assigned to Officer",
       feedback: "Give Feedback",
-      resolvedNote: "The issue has been resolved and the affected area has been cleaned."
+      meetingHeader: "Meeting Request",
+      meetingPending: "Meeting request is being reviewed",
+      meetingScheduled: "Meeting Scheduled",
+      location: "Location",
+      time: "Time"
     },
     AMH: {
       header: "የአቤቱታው ሁኔታ",
@@ -41,46 +46,51 @@ const ComplaintDetails = ({ complaint }) => {
       pending: "በሂደት ላይ",
       assigned: "ለባለሙያ ተመድቧል",
       feedback: "አስተያየት ይስጡ",
-      resolvedNote: "ጉዳዩ ተፈትቷል፤ እንዲሁም የተበከለው አካባቢ እንዲጸዳ ተደርጓል።"
-    },
-    // ... ORM and TIG translations omitted for brevity, add 'assigned' key to them
+      meetingHeader: "የስብሰባ ጥያቄ",
+      meetingPending: "የስብሰባ ጥያቄው በግምገማ ላይ ነው",
+      meetingScheduled: "ስብሰባ ተይዟል",
+      location: "ቦታ",
+      time: "ሰዓት"
+    }
   };
 
   const t = translations[Language] || translations.ENG;
 
-  const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-    const options = { month: 'long', day: 'numeric', year: 'numeric' };
-    try {
-      if (Language === "AMH") return date.toLocaleDateString('am-ET');
-      return date.toLocaleDateString('en-US', options);
-    } catch {
-      return date.toLocaleDateString();
-    }
-  };
+const formatDate = (dateStr) => {
+  if (!dateStr) return "---";
+  const date = new Date(dateStr);
 
-  // Helper to get status styles and text
+  if (Language === "AMH") {
+    // 'am-ET-u-ca-ethiopian' forces the Ethiopian Calendar logic
+    return new Intl.DateTimeFormat('am-ET-u-ca-ethiopian', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(date);
+  }
+
+  // Fallback for English (Gregorian)
+  return new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+};
   const getStatusDisplay = (status) => {
     switch (status) {
-      case "RESOLVED":
-        return { label: t.resolved, color: "bg-emerald-100 text-emerald-600" };
-      case "ASSIGNED":
-        return { label: t.assigned || "Assigned", color: "bg-amber-100 text-amber-600" };
-      case "PENDING":
-        return { label: t.pending, color: "bg-blue-100 text-blue-600" };
-      default:
-        return { label: status, color: "bg-slate-100 text-slate-600" };
+      case "RESOLVED": return { label: t.resolved, color: "bg-green-100 text-green-600" };
+      case "ASSIGNED": return { label: t.assigned, color: "bg-amber-100 text-amber-600" };
+      case "SUBMITTED":
+      case "PENDING": return { label: t.pending, color: "bg-blue-100 text-blue-600" };
+      default: return { label: status, color: "bg-slate-100 text-slate-600" };
     }
   };
 
   const statusInfo = getStatusDisplay(data.status);
-  const categoryName = Language === "AMH" ? (data.Category?.nameAm || data.Category?.name) : data.Category?.name;
 
   return (
     <div className="bg-white border border-slate-200 rounded-[2.5rem] shadow-sm p-8 mt-6 text-slate-800 relative overflow-hidden">
-      <h2 className="text-2xl font-bold mb-6 text-slate-900 border-b border-slate-100 pb-4 tracking-tight">
-        {t.header}
-      </h2>
+      <h2 className="text-2xl font-bold mb-6 text-slate-900 border-b border-slate-100 pb-4 tracking-tight">{t.header}</h2>
 
       {/* Reference Card */}
       <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 mb-8 flex items-center justify-between">
@@ -99,7 +109,7 @@ const ComplaintDetails = ({ complaint }) => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm mb-8 bg-slate-50 p-6 rounded-[2rem] border border-slate-100">
         <div>
           <strong className="text-slate-400 block mb-1 uppercase text-[10px] tracking-widest">{t.category}:</strong>
-          <span className="font-bold text-slate-900 text-base">{categoryName}</span>
+          <span className="font-bold text-slate-900 text-base">{data.category || data.Category?.name}</span>
         </div>
         <div>
           <strong className="text-slate-400 block mb-1 uppercase text-[10px] tracking-widest">{t.date}:</strong>
@@ -113,34 +123,43 @@ const ComplaintDetails = ({ complaint }) => {
         </div>
       </div>
 
-      {/* Dynamic Progress/Note Section */}
-      {data.status === "RESOLVED" ? (
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 bg-slate-900 rounded-[2rem] p-6 text-white relative overflow-hidden">
-          <FontAwesomeIcon icon={faCheckDouble} className="absolute -right-6 -bottom-6 text-white opacity-5 text-7xl rotate-12" />
-          <h4 className="font-bold mb-2 text-lg flex items-center gap-3">
-            <div className="bg-emerald-500 w-10 h-10 rounded-xl flex items-center justify-center">
-              <FontAwesomeIcon icon={faCheckDouble} className="text-white text-sm" />
-            </div>
-            <span>{t.resolved}</span>
+      {/* NEW: Meeting Section */}
+      {data.meeting && (
+        <div className="mt-6 p-6 bg-indigo-50 border border-indigo-100 rounded-[2rem]">
+          <h4 className="font-black text-indigo-900 text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+             <FontAwesomeIcon icon={faCalendarAlt} /> {t.meetingHeader}
           </h4>
-          <p className="text-sm opacity-80 leading-relaxed pl-14">{t.resolvedNote}</p>
-        </motion.div>
-      ) : data.status === "ASSIGNED" && (
-        <div className="mt-4 p-6 border-2 border-dashed border-amber-100 rounded-[2rem] flex items-start gap-4">
-          <div className="bg-amber-100 text-amber-600 p-3 rounded-2xl flex-shrink-0">
-             <FontAwesomeIcon icon={faUserClock} />
-          </div>
-          <div>
-            <h4 className="font-bold text-slate-900">{t.assigned}</h4>
-            <p className="text-sm text-slate-500 mt-1">Your complaint is currently being reviewed by a dedicated EPA officer. You will be notified once an action is taken.</p>
-          </div>
+          
+          {data.meeting.status === "PENDING" ? (
+            <div className="flex items-center gap-3 text-indigo-600">
+              <div className="animate-pulse bg-indigo-200 p-2 rounded-lg">
+                <FontAwesomeIcon icon={faUserClock} />
+              </div>
+              <p className="text-sm font-bold">{t.meetingPending}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-indigo-100">
+                <FontAwesomeIcon icon={faClock} className="text-indigo-400" />
+                <div>
+                  <p className="text-[10px] uppercase text-slate-400 font-bold">{t.time}</p>
+                  <p className="text-sm font-bold text-slate-800">{data.meeting.scheduledDate} @ {data.meeting.scheduledTime}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-indigo-100">
+                <FontAwesomeIcon icon={faMapMarkerAlt} className="text-indigo-400" />
+                <div>
+                  <p className="text-[10px] uppercase text-slate-400 font-bold">{t.location}</p>
+                  <p className="text-sm font-bold text-slate-800">{data.meeting.location}</p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
-      <Link 
-        to='/FeedbackPage'
-        className="mt-8 w-full py-5 rounded-[1.5rem] font-bold uppercase tracking-widest text-xs text-white bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-100 transition-all flex items-center justify-center gap-2"
-      >
+      {/* Buttons and other details... */}
+      <Link to='/FeedbackPage' className="mt-8 w-full py-5 rounded-[1.5rem] font-bold uppercase tracking-widest text-xs text-white bg-blue-600 hover:bg-blue-700 shadow-xl transition-all flex items-center justify-center gap-2">
         {t.feedback}
       </Link>
     </div>
