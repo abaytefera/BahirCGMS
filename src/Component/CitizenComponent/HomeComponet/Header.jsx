@@ -73,7 +73,7 @@ const Header = ({ page }) => {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-[100] transition-all duration-500 ease-in-out ${
+      className={`fixed top-0 inset-x-0 z-100 transition-all duration-500 ease-in-out ${
         windowOffset > 500 ? "bg-black shadow-lg" : "bg-transparent"
       } ${
         page ? "bg-[url('/heroJpg.jpg')] bg-cover bg-center bg-no-repeat" : ""
@@ -128,7 +128,7 @@ const Header = ({ page }) => {
 
       {/* MOBILE MENU */}
       {open && (
-        <div className="md:hidden bg-white text-gray-800 shadow-2xl p-6 flex flex-col gap-4 animate-in slide-in-from-top duration-300">
+        <div className="md:hidden bg-white relative z-100 text-gray-800 shadow-2xl p-6 flex flex-col mt-3 gap-4 animate-in slide-in-from-top duration-300">
           <a  href="/#hero" onClick={() => setOpen(false)} to="/">{content.home}</a>
           <a href="/#about" onClick={() => setOpen(false)} to="/about">{content.about}</a>
           <a  href="/#service" onClick={() => setOpen(false)} to="/services">{content.services}</a>
