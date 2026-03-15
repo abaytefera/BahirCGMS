@@ -27,7 +27,8 @@ export const APi = createApi({
     'Settings', 
     'Dashboard',
     'UserProfile',
-    'AdminStats'
+    'AdminStats',
+    'Messages'
   ],
   endpoints: () => ({}),
 });

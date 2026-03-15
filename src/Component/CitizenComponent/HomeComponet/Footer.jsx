@@ -20,7 +20,7 @@ const Footer = () => {
       disclaimer: "Disclaimer",
       terms: "Terms & Condition",
       gdpr: "GDPR",
-      authority: "Powered by Pixel Addis Solutions"
+      authority: "Powered by Abay Tefera"
     },
     AMH: {
       official: "ይህ ይፋዊ የመንግስት የአገልግሎት መስጫ ፕላትፎርም ነው።",
@@ -36,7 +36,7 @@ const Footer = () => {
       disclaimer: "ማስተባበያ",
       terms: "ውሎች እና ሁኔታዎች",
       gdpr: "GDPR",
-      authority: "በፒክሰል አዲስ ሶሉሽንስ የበለፀገ"
+      authority: "በአባይ ተፈራ የበለፀገ"
     },
     ORM: {
       official: "Kun waltajjii tajaajila mootummaa seera qabeessa dha.",

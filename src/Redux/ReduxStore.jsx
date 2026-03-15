@@ -14,10 +14,12 @@ import storage from 'redux-persist/lib/storage';
 import { APi } from "./CenteralAPI.jsx";
 import webState from "./WebState.jsx";
 
+import { chatApi } from "./Conversation.jsx";
 
 const rootReducer = combineReducers({
   'webState': webState,
-  [APi.reducerPath]: APi.reducer
+  [APi.reducerPath]: APi.reducer,
+ 'chatApi': chatApi.reducer
 });
 
 // Added 'auth' to whitelist so the login token persists on refresh
@@ -37,7 +39,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(APi.middleware);
+    }).concat(APi.middleware,chatApi.middleware);
   }
 });
 
