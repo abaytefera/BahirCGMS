@@ -21,7 +21,7 @@ export const ChatBot = ({ content }) => {
   });
 
   // --- 2. RTK QUERY HOOKS ---
-  const { data: history = [], isLoading: isHistoryLoading } = useGetChatHistoryQuery(sessionId,{pollingInterval:isOpen ? 1000 :0});
+ const { data: history = [], isLoading: isHistoryLoading } = useGetChatHistoryQuery(sessionId);
   const [sendMessage, { isLoading: isSending }] = useSendMessageMutation();
 
   // Combine initial welcome with history if history is empty
