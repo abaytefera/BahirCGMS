@@ -32,13 +32,12 @@ export const chatApi = createApi({
           company_id: COMPANY_ID 
         },
       }),
-      // 🔴 በጣም ወሳኝ: እዚህ ጋር invalidatesTags መኖር የለበትም!
-      // ካለ መልእክቱ AI እስኪመልስ ድረስ ይጠፋል።
+     
 
       async onQueryStarted(payload, { dispatch, queryFulfilled }) {
         const { session_id, message } = payload;
 
-        // 1. OPTIMISTIC UPDATE: አንተ "Send" ስትል ወዲያው እዚህ ይገባል
+        
         const patchResult = dispatch(
           chatApi.util.updateQueryData("getChatHistory", session_id, (draft) => {
             if (Array.isArray(draft)) {
@@ -51,10 +50,10 @@ export const chatApi = createApi({
         );
 
         try {
-          // 2. ሰርቨሩን ይጠብቃል
+          
           const { data } = await queryFulfilled;
 
-          // 3. AI ሲመልስ ደግሞ እሱን ይጨምራል
+          
           dispatch(
             chatApi.util.updateQueryData("getChatHistory", session_id, (draft) => {
               if (Array.isArray(draft)) {
@@ -67,7 +66,7 @@ export const chatApi = createApi({
             })
           );
         } catch {
-          // ሰርቨር እምቢ ካለ ብቻ መልእክቱን ያጠፋዋል
+         
           patchResult.undo();
         }
       },

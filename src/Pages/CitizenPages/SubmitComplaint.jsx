@@ -29,10 +29,10 @@ export default function SubmitComplaint() {
   const handleFormSubmit = async (finalFormData) => {
     try {
      
-      for (let pair of finalFormData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
-      }
-
+     for (let [key, value] of finalFormData.entries()) {
+  console.log(`${key}:`, value);
+}
+     
       // 1. Submit the FormData object directly to the mutation
       const result = await submitComplaint(finalFormData).unwrap();
       

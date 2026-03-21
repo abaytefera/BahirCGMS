@@ -45,12 +45,18 @@ export default function ComplaintForm({ onSubmit, isLoading, serverError }) {
     finalFormData.append("isDisabled", rawData.get("isDisabled") === "on");
     finalFormData.append("isCorruptionRelated", rawData.get("isCorruptionRelated") === "on");
 
+     
     // 5. File Handling (API Key: "files", Max: 5)
-    selectedFiles.slice(0, 5).forEach((fileObj) => {
-      finalFormData.append("files", fileObj.file); 
-    });
-
+   // ከዚህ ይልቅ: finalFormData.append("files", fileObj.file);
+// ይህንን ተጠቀም:
+selectedFiles.slice(0, 5).forEach((file) => {
+  console.log(file)
+  finalFormData.append("attachments", file); // 'file' ራሱ ፋይሉ ስለሆነ
+});
+    console.log("what is error")
+  console.log(finalFormData)
     onSubmit(finalFormData); 
+
   };
 
   return (
